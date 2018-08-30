@@ -1,5 +1,6 @@
 package com.kafka.producer
 
+import java.io.FileInputStream
 import java.util.Properties
 
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
@@ -11,7 +12,7 @@ object SecureKafkaProducer {
   @transient lazy val log = LogManager.getLogger(getClass)
 
   def main(args: Array[String]): Unit = {
-    if (args.length != 2) {
+    /*if (args.length != 2) {
       log.error("Usage: SecureKafkaProducer [bootstrap] [topic]")
       log.error("Example: SecureKafkaProducer localhost:9092 topic1")
       System.exit(1)
@@ -19,12 +20,15 @@ object SecureKafkaProducer {
 
     val bootstrapServer = args(0)
     val topic = args(1)
-
+*/
+    val topic = "test"
     log.info("Creating config properties...")
     val kafkaProperties = new Properties
-    kafkaProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer)
-    kafkaProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.ByteArraySerializer")
-    kafkaProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.ByteArraySerializer")
+
+    kafkaProperties.load(new FileInputStream("/tmp/prod.properties"))
+    //kafkaProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer)
+    kafkaProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer")
+    kafkaProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
     log.info("OK")
 
     log.info("Creating kafka producer...")
